@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class Home {
-    @RequestMapping("/welcome")
-    public String welcome() {
-        String text = "Welcome to JWTAuthentication!";
-        text+= "this text is not for unauthenticated users.";
-        return text;
-    }
+//    @RequestMapping("/welcome")
+//    public String welcome() {
+//        String text = "Welcome to JWTAuthentication!";
+//        text+= "this text is not for unauthenticated users.";
+//        return text;
+//    }
 }
