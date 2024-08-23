@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>info.salma</groupId>
-    <artifactId>jwtauthentication</artifactId>
+    <artifactId>jwtAuthentication</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>jwtauthentication</name>
     <description>jwtauthentication</description>
