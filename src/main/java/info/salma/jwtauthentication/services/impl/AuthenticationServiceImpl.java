@@ -1,6 +1,7 @@
 package info.salma.jwtauthentication.services.impl;
 
 import info.salma.jwtauthentication.dto.JwtAuthenticationResponse;
+import info.salma.jwtauthentication.dto.RefreshTokenRequest;
 import info.salma.jwtauthentication.dto.SignInRequest;
 import info.salma.jwtauthentication.dto.SignUpRequest;
 import info.salma.jwtauthentication.entity.Role;
@@ -49,6 +50,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
        jwtAuthenticationResponse.setRefreshToken(refreshToken);
        return jwtAuthenticationResponse;
 
+    }
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        String userEmail = jwtService.extractUsername(refreshTokenRequest.getToken());
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        if (jwtService.validateToken(refreshTokenRequest.getToken(), user)) {
+           var jwt = jwtService.generateToken(user);
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
+            return jwtAuthenticationResponse;
+        }
+        return null;
     }
 
 }

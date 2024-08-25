@@ -62,13 +62,12 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
             <version>0.11.5</version>
-            <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId> <!-- Use this if you are using Jackson for JSON processing -->
+            <artifactId>jjwt-jackson</artifactId>
             <version>0.11.5</version>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>

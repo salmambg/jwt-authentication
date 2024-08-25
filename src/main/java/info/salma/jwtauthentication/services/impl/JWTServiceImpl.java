@@ -1,6 +1,5 @@
 package info.salma.jwtauthentication.services.impl;
 
-
 import info.salma.jwtauthentication.services.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,39 +16,56 @@ import java.util.function.Function;
 @Service
 public class JWTServiceImpl implements JWTService {
 
+    private static final String SECRET_KEY = "M2Q2ZTY4NmE4MzNlNzZlODg4ZTI2YzRlZjk4ZTg1OGZjOTFkYjYwNTE4YjgxYjU4NzJmM2ZmM2JlMGFhZg==";
 
+
+    // Base64-encoded key for HS384 (or use HS256 for 256-bit key)
+
+    @Override
     public String generateToken(UserDetails userDetails) {
-        return Jwts.builder().setSubject(userDetails.getUsername()).
-                setIssuedAt(new Date(System.currentTimeMillis())).
-                setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)).
-                signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // 7 days
+                .signWith(getSignKey(), SignatureAlgorithm.HS384)
+                .compact();
     }
 
-    public String generateRefreshToken(Map<String, Object> extractClaims,UserDetails userDetails) {
-        return Jwts.builder().setClaims(extractClaims).setSubject(userDetails.getUsername()).
-                setIssuedAt(new Date(System.currentTimeMillis())).
-                setExpiration(new Date(System.currentTimeMillis() + 604800000)).
-                signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+    @Override
+    public String generateRefreshToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+        return Jwts.builder()
+                .setClaims(extractClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 604800000)) // 7 days
+                .signWith(getSignKey(), SignatureAlgorithm.HS384)
+                .compact();
     }
 
+    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims =extractAllClaims(token);
+        final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-
     private Key getSignKey() {
-        return Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
+    @Override
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));

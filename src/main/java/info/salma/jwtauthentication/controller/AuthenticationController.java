@@ -1,6 +1,7 @@
 package info.salma.jwtauthentication.controller;
 
 import info.salma.jwtauthentication.dto.JwtAuthenticationResponse;
+import info.salma.jwtauthentication.dto.RefreshTokenRequest;
 import info.salma.jwtauthentication.dto.SignInRequest;
 import info.salma.jwtauthentication.dto.SignUpRequest;
 import info.salma.jwtauthentication.entity.User;
@@ -27,5 +28,10 @@ public class AuthenticationController {
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
+    }
+
 
 }
