@@ -16,10 +16,9 @@ import java.util.function.Function;
 @Service
 public class JWTServiceImpl implements JWTService {
 
+
     private static final String SECRET_KEY = "M2Q2ZTY4NmE4MzNlNzZlODg4ZTI2YzRlZjk4ZTg1OGZjOTFkYjYwNTE4YjgxYjU4NzJmM2ZmM2JlMGFhZg==";
 
-
-    // Base64-encoded key for HS384 (or use HS256 for 256-bit key)
 
     @Override
     public String generateToken(UserDetails userDetails) {
